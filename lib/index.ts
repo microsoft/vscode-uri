@@ -242,8 +242,8 @@ export default class Uri {
 		return ret;
 	}
 
-	public static create(scheme?: string, authority?: string, path?: string, query?: string, fragment?: string): Uri {
-		return new Uri().with({ scheme, authority, path, query, fragment });
+	public static from(components: { scheme?: string; authority?: string; path?: string; query?: string; fragment?: string }): Uri {
+		return new Uri().with(components);
 	}
 
 	private static _validate(ret: Uri): void {
