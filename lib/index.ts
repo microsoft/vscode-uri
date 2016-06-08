@@ -4,20 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
-
-
-
-// OS detection
-declare const process: { platform: 'win32' };
-declare const navigator: { userAgent: string };
-let isWindows: boolean;
-if (typeof process === 'object') {
-	isWindows = process.platform === 'win32';
-} else if (typeof navigator === 'object') {
-	let userAgent = navigator.userAgent;
-	isWindows = userAgent.indexOf('Windows') >= 0;
-}
-
 function _encode(ch: string): string {
 	return '%' + ch.charCodeAt(0).toString(16).toUpperCase();
 }
@@ -33,7 +19,7 @@ function encodeNoop(str: string): string {
 
 
 /**
- * Uniform Resource Identifier (URI) http://tools.ietf.org/html/rfc3986.
+ * Uniform Resource Identifier (Uri) http://tools.ietf.org/html/rfc3986.
  * This class is a simple parser which creates the basic component paths
  * (http://tools.ietf.org/html/rfc3986#section-3) with minimal validation
  * and encoding.
@@ -115,10 +101,10 @@ export default class Uri {
 	// ---- filesystem path -----------------------
 
 	/**
-	 * Returns a string representing the corresponding file system path of this URI.
+	 * Returns a string representing the corresponding file system path of this Uri.
 	 * Will handle UNC paths and normalize windows drive letters to lower-case. Also
 	 * uses the platform specific path separator. Will *not* validate the path for
-	 * invalid characters and semantics. Will *not* look at the scheme of this URI.
+	 * invalid characters and semantics. Will *not* look at the scheme of this Uri.
 	 */
 	get fsPath() {
 		if (!this._fsPath) {
@@ -143,6 +129,18 @@ export default class Uri {
 
 	// ---- modify to new -------------------------
 
+	/**
+	 * Derive a new Uri from this Uri.
+	 *
+	 * @param change An object that describes a change to this Uri.
+	 * @return A new Uri that reflects the given change. Will return `this` Uri if the change
+	 *  is not changing anything.
+	 * @sample ```
+		let file = Uri.parse('before:some/file/path');
+		let other = file.with({ scheme: 'after' });
+		assert.ok(other.toString() === 'after:some/file/path');
+		* ```
+		*/
 	public with(change: { scheme?: string; authority?: string; path?: string; query?: string; fragment?: string }): Uri {
 
 		if (!change) {
@@ -176,6 +174,23 @@ export default class Uri {
 
 	// ---- parse & validate ------------------------
 
+	/**
+	 * Create an Uri from uri components.
+	 *
+	 * @param components An object containing the Uri components
+	 * @return A new Uri instance
+	 */
+	public static from(components: { scheme?: string; authority?: string; path?: string; query?: string; fragment?: string }): Uri {
+		return new Uri().with(components);
+	}
+
+	/**
+	 * Create an Uri from a string. Will throw if the given value is not
+	 * valid.
+	 *
+	 * @param value The string value of an Uri.
+	 * @return A new Uri instance.
+	 */
 	public static parse(value: string): Uri {
 		const ret = new Uri();
 		const data = Uri._parseComponents(value);
@@ -188,6 +203,13 @@ export default class Uri {
 		return ret;
 	}
 
+	/**
+	 * Create an Uri from a file system path. The [scheme](#Uri.scheme)
+	 * will be `file`.
+	 *
+	 * @param path A file system or UNC path.
+	 * @return A new Uri instance.
+	 */
 	public static file(path: string): Uri {
 
 		const ret = new Uri();
@@ -242,23 +264,19 @@ export default class Uri {
 		return ret;
 	}
 
-	public static from(components: { scheme?: string; authority?: string; path?: string; query?: string; fragment?: string }): Uri {
-		return new Uri().with(components);
-	}
-
 	private static _validate(ret: Uri): void {
 
 		// validation
 		// path, http://tools.ietf.org/html/rfc3986#section-3.3
-		// If a URI contains an authority component, then the path component
-		// must either be empty or begin with a slash ("/") character.  If a URI
+		// If a Uri contains an authority component, then the path component
+		// must either be empty or begin with a slash ("/") character.  If a Uri
 		// does not contain an authority component, then the path cannot begin
 		// with two slash characters ("//").
 		if (ret.authority && ret.path && ret.path[0] !== '/') {
-			throw new Error('[UriError]: If a URI contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
+			throw new Error('[UriError]: If a Uri contains an authority component, then the path component must either be empty or begin with a slash ("/") character');
 		}
 		if (!ret.authority && ret.path.indexOf('//') === 0) {
-			throw new Error('[UriError]: If a URI does not contain an authority component, then the path cannot begin with two slash characters ("//")');
+			throw new Error('[UriError]: If a Uri does not contain an authority component, then the path cannot begin with two slash characters ("//")');
 		}
 	}
 
@@ -354,4 +372,15 @@ interface UriComponents {
 	path: string;
 	query: string;
 	fragment: string;
+}
+
+// OS detection
+declare const process: { platform: 'win32' };
+declare const navigator: { userAgent: string };
+let isWindows: boolean;
+if (typeof process === 'object') {
+	isWindows = process.platform === 'win32';
+} else if (typeof navigator === 'object') {
+	let userAgent = navigator.userAgent;
+	isWindows = userAgent.indexOf('Windows') >= 0;
 }
