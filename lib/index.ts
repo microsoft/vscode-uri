@@ -307,22 +307,24 @@ export default class Uri {
 			? encodeURIComponent2
 			: encodeNoop;
 
-		const parts: string[] = [];
+		let result = '';
 
 		let {scheme, authority, path, query, fragment} = uri;
 		if (scheme) {
-			parts.push(scheme, ':');
+			result += scheme;
+			result += ':'
 		}
 		if (authority || scheme === 'file') {
-			parts.push('//');
+			result += '//';
 		}
 		if (authority) {
 			authority = authority.toLowerCase();
 			let idx = authority.indexOf(':');
 			if (idx === -1) {
-				parts.push(encoder(authority));
+				result += encoder(authority);
 			} else {
-				parts.push(encoder(authority.substr(0, idx)), authority.substr(idx));
+				result += encoder(authority.substr(0, idx))
+				result += authority.substr(idx);
 			}
 		}
 		if (path) {
@@ -340,21 +342,24 @@ export default class Uri {
 			while (true) {
 				let idx = path.indexOf(Uri._slash, lastIdx);
 				if (idx === -1) {
-					parts.push(encoder(path.substring(lastIdx)).replace(/[#?]/, _encode));
+					result += encoder(path.substring(lastIdx)).replace(/[#?]/, _encode);
 					break;
 				}
-				parts.push(encoder(path.substring(lastIdx, idx)).replace(/[#?]/, _encode), Uri._slash);
+				result += encoder(path.substring(lastIdx, idx)).replace(/[#?]/, _encode);
+				result += Uri._slash;
 				lastIdx = idx + 1;
 			};
 		}
 		if (query) {
-			parts.push('?', encoder(query));
+			result += '?';
+			result += encoder(query);
 		}
 		if (fragment) {
-			parts.push('#', encoder(fragment));
+			result += '#';
+			result += encoder(fragment);
 		}
 
-		return parts.join(Uri._empty);
+		return result;
 	}
 
 	public toJSON(): any {
