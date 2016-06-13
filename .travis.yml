@@ -1,0 +1,9 @@
+language: node_js
+sudo: false
+
+node_js:
+  - "5"
+
+script:
+  - npm install
+  - npm run test
