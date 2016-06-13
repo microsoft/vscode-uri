@@ -222,39 +222,6 @@ suite('URI', () => {
 		assert.equal(value.toString(), 'file:///a.file');
 	});
 
-	test('http#toString', () => {
-		assert.equal(Uri.from({ scheme: 'http', authority: 'www.msft.com', path: '/my/path' }).toString(), 'http://www.msft.com/my/path');
-		assert.equal(Uri.from({ scheme: 'http', authority: 'www.msft.com', path: '/my/path' }).toString(), 'http://www.msft.com/my/path');
-		assert.equal(Uri.from({ scheme: 'http', authority: 'www.MSFT.com', path: '/my/path' }).toString(), 'http://www.msft.com/my/path');
-		assert.equal(Uri.from({ scheme: 'http', path: 'my/path' }).toString(), 'http:my/path');
-		assert.equal(Uri.from({ scheme: 'http', path: '/my/path' }).toString(), 'http:/my/path');
-		assert.equal(Uri.from({ scheme: '', path: 'my/path' }).toString(), 'my/path');
-		assert.equal(Uri.from({ scheme: '', path: '/my/path' }).toString(), '/my/path');
-		//http://a-test-site.com/#test=true
-		assert.equal(Uri.from({ scheme: 'http', authority: 'a-test-site.com', path: '/', query: 'test=true' }).toString(), 'http://a-test-site.com/?test%3Dtrue');
-		assert.equal(Uri.from({ scheme: 'http', authority: 'a-test-site.com', path: '/', fragment: 'test=true' }).toString(), 'http://a-test-site.com/#test%3Dtrue');
-	});
-
-	test('http#toString, encode=FALSE', () => {
-		assert.equal(Uri.from({ scheme: 'http', authority: 'a-test-site.com', path: '/', query: 'test=true' }).toString(true), 'http://a-test-site.com/?test=true');
-		assert.equal(Uri.from({ scheme: 'http', authority: 'a-test-site.com', path: '/', fragment: 'test=true' }).toString(true), 'http://a-test-site.com/#test=true');
-		assert.equal(Uri.from({ scheme: 'http', path: '/api/files/test.me', query: 't=1234' }).toString(true), 'http:/api/files/test.me?t=1234');
-
-		var value = Uri.parse('file://shares/pröjects/c%23/#l12');
-		assert.equal(value.authority, 'shares');
-		assert.equal(value.path, '/pröjects/c#/');
-		assert.equal(value.fragment, 'l12');
-		assert.equal(value.toString(), 'file://shares/pr%C3%B6jects/c%23/#l12');
-		assert.equal(value.toString(true), 'file://shares/pröjects/c%23/#l12');
-
-		var uri2 = Uri.parse(value.toString(true));
-		var uri3 = Uri.parse(value.toString());
-		assert.equal(uri2.authority, uri3.authority);
-		assert.equal(uri2.path, uri3.path);
-		assert.equal(uri2.query, uri3.query);
-		assert.equal(uri2.fragment, uri3.fragment);
-	});
-
 	test('from', () => { 
 		assert.throws(() => Uri.from(undefined));
 		assert.throws(() => Uri.from({scheme: 'file', path: '//foo/bar'}));
@@ -331,5 +298,38 @@ suite('URI', () => {
 		uri2 = Uri.parse(uri.toString());
 		assert.equal(uri2.query, 'LinkId=518008&foö&ké¥=üü');
 		assert.equal(uri2.query, uri.query);
+	});
+
+	test('toString, http', () => {
+		assert.equal(Uri.from({ scheme: 'http', authority: 'www.msft.com', path: '/my/path' }).toString(), 'http://www.msft.com/my/path');
+		assert.equal(Uri.from({ scheme: 'http', authority: 'www.msft.com', path: '/my/path' }).toString(), 'http://www.msft.com/my/path');
+		assert.equal(Uri.from({ scheme: 'http', authority: 'www.MSFT.com', path: '/my/path' }).toString(), 'http://www.msft.com/my/path');
+		assert.equal(Uri.from({ scheme: 'http', path: 'my/path' }).toString(), 'http:my/path');
+		assert.equal(Uri.from({ scheme: 'http', path: '/my/path' }).toString(), 'http:/my/path');
+		assert.equal(Uri.from({ scheme: '', path: 'my/path' }).toString(), 'my/path');
+		assert.equal(Uri.from({ scheme: '', path: '/my/path' }).toString(), '/my/path');
+		//http://a-test-site.com/#test=true
+		assert.equal(Uri.from({ scheme: 'http', authority: 'a-test-site.com', path: '/', query: 'test=true' }).toString(), 'http://a-test-site.com/?test%3Dtrue');
+		assert.equal(Uri.from({ scheme: 'http', authority: 'a-test-site.com', path: '/', fragment: 'test=true' }).toString(), 'http://a-test-site.com/#test%3Dtrue');
+	});
+
+	test('toString, encode=FALSE', () => {
+		assert.equal(Uri.from({ scheme: 'http', authority: 'a-test-site.com', path: '/', query: 'test=true' }).toString(true), 'http://a-test-site.com/?test=true');
+		assert.equal(Uri.from({ scheme: 'http', authority: 'a-test-site.com', path: '/', fragment: 'test=true' }).toString(true), 'http://a-test-site.com/#test=true');
+		assert.equal(Uri.from({ scheme: 'http', path: '/api/files/test.me', query: 't=1234' }).toString(true), 'http:/api/files/test.me?t=1234');
+
+		var value = Uri.parse('file://shares/pröjects/c%23/#l12');
+		assert.equal(value.authority, 'shares');
+		assert.equal(value.path, '/pröjects/c#/');
+		assert.equal(value.fragment, 'l12');
+		assert.equal(value.toString(), 'file://shares/pr%C3%B6jects/c%23/#l12');
+		assert.equal(value.toString(true), 'file://shares/pröjects/c%23/#l12');
+
+		var uri2 = Uri.parse(value.toString(true));
+		var uri3 = Uri.parse(value.toString());
+		assert.equal(uri2.authority, uri3.authority);
+		assert.equal(uri2.path, uri3.path);
+		assert.equal(uri2.query, uri3.query);
+		assert.equal(uri2.fragment, uri3.fragment);
 	});
 });
