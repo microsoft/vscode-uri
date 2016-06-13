@@ -181,6 +181,9 @@ export default class Uri {
 	 * @return A new Uri instance
 	 */
 	public static from(components: { scheme?: string; authority?: string; path?: string; query?: string; fragment?: string }): Uri {
+		if (!components) {
+			throw new Error();
+		}
 		return new Uri().with(components);
 	}
 
