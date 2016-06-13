@@ -1,5 +1,7 @@
 ## vscode-uri
 
+[![Build Status](https://travis-ci.org/Microsoft/vscode-uri.svg?branch=master)](https://travis-ci.org/Microsoft/vscode-uri)
+
 This module contains the URI implementation that is used by VS Code and its extensions. 
 It has support for parsing a string into `scheme`, `authority`, `path`, `query`, and
 `fragment` URI components as defined in: http://tools.ietf.org/html/rfc3986
