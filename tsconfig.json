@@ -2,11 +2,14 @@
     "compilerOptions": {
         "target": "es5",
         "declaration": true,
-        "noLib": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitAny": true,
+        "lib": [
+            "es5"
+        ],
         "module": "umd"
     },
     "files": [
-        "lib/index.ts",
-        "node_modules/typescript/lib/lib.core.d.ts"
+        "lib/index.ts"
     ]
 }
