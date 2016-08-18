@@ -47,10 +47,11 @@ export default class Uri {
 	private _path: string;
 	private _query: string;
 	private _fragment: string;
-	private _formatted: string;
-	private _fsPath: string;
 
-	constructor() {
+	private _formatted: string | null;
+	private _fsPath: string | null;
+
+	private constructor() {
 		this._scheme = Uri._empty;
 		this._authority = Uri._empty;
 		this._path = Uri._empty;

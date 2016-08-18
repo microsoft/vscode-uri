@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "es5",
         "declaration": true,
+        "strictNullChecks": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
         "lib": [
