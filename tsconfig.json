@@ -2,12 +2,8 @@
     "compilerOptions": {
         "target": "es5",
         "declaration": true,
-        "strictNullChecks": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
-        "lib": [
-            "es5"
-        ],
         "module": "umd"
     },
     "files": [

@@ -21,6 +21,6 @@
   "homepage": "https://github.com/Microsoft/vscode-uri#readme",
   "devDependencies": {
     "mocha": "^2.5.3",
-    "typescript": "next"
+    "typescript": "1.8.10"
   }
 }
