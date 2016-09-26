@@ -4,7 +4,11 @@
         "declaration": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
-        "module": "umd"
+        "module": "umd",
+        "strictNullChecks": true,
+        "lib": [
+            "es2015"
+        ]
     },
     "files": [
         "lib/index.ts"
