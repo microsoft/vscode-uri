@@ -45,6 +45,10 @@ assert.ok(uri.fragment === '');
 assert.ok(uri.toString() === 'file:///users/me/c%23-projects/')
 ```
 
+## Contributing
+
+The source of this module is taken straight from the [vscode](https://github.com/Microsoft/vscode)-sources and because of that issues and pull request should be created in that repository. Thanks and Happy Coding!
+
 ## Code of Conduct
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
