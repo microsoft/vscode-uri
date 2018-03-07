@@ -7,9 +7,7 @@
         "module": "umd",
         "lib": [
             "es2015"
-        ]
-    },
-    "files": [
-        "lib/index.ts"
-    ]
+        ],
+        "outDir": "../lib/umd"
+    }
 }

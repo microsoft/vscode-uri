@@ -1,4 +1,3 @@
 node_modules
-lib/*.js
-lib/*.d.ts
+lib/
 spec/*.js
