@@ -19,11 +19,11 @@ scheme     authority       path        query   fragment
 ## Usage
 
 ```js
-import Uri from 'vscode-uri'
+import { URI } from 'vscode-uri'
 
-// parse an Uri from string
+// parse an URI from string
 
-let uri = Uri.parse('https://code.visualstudio.com/docs/extensions/overview#frag')
+let uri = URI.parse('https://code.visualstudio.com/docs/extensions/overview#frag')
 
 assert.ok(uri.scheme === 'https');
 assert.ok(uri.authority === 'code.visualstudio.com');
@@ -33,9 +33,9 @@ assert.ok(uri.fragment === 'frag');
 assert.ok(uri.toString() === 'https://code.visualstudio.com/docs/extensions/overview#frag')
 
 
-// create an Uri from a fs path
+// create an URI from a fs path
 
-let uri = Uri.file('/users/me/c#-projects/');
+let uri = URI.file('/users/me/c#-projects/');
 
 assert.ok(uri.scheme === 'file');
 assert.ok(uri.authority === '');
