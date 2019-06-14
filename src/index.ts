@@ -434,7 +434,6 @@ const enum CharCode {
 const _schemePattern = /^\w[\w\d+.-]*$/;
 const _singleSlashStart = /^\//;
 const _doubleSlashStart = /^\/\//;
-
 let _throwOnMissingSchema: boolean = true;
 
 /**
@@ -521,7 +520,10 @@ const _empty = '';
 const _slash = '/';
 const _regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
 
-function _isQueryStringScheme(scheme: string) {
+function _isQueryStringScheme(scheme: string): boolean {
+	if (!scheme) {
+		return false;
+	}
 	switch (scheme.toLowerCase()) {
 		case 'http':
 		case 'https':
@@ -756,7 +758,7 @@ export class URI implements UriComponents {
 
 		// normalize to fwd-slashes on windows,
 		// on other systems bwd-slashes are valid
-		// filename character, eg /f\oo/ba\r.txt
+		// filename character, e.g. /f\oo/ba\r.txt
 		if (isWindows) {
 			path = path.replace(/\\/g, _slash);
 		}
@@ -814,7 +816,7 @@ export class URI implements UriComponents {
 	static revive(data: UriComponents | URI | undefined | null): URI | undefined | null;
 	static revive(data: UriComponents | URI | undefined | null): URI | undefined | null {
 		if (!data) {
-			return <any>data;
+			return data as any;
 		} else if (data instanceof URI) {
 			return data;
 		} else {
