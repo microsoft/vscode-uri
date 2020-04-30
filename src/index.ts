@@ -454,7 +454,6 @@ function isAsciiLetter(code: number): boolean {
 }
 //#endregion
 
-
 const _schemePattern = /^\w[\w\d+.-]*$/;
 const _singleSlashStart = /^\//;
 const _doubleSlashStart = /^\/\//;
@@ -532,6 +531,7 @@ const _regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
  * (http://tools.ietf.org/html/rfc3986#section-3) with minimal validation
  * and encoding.
  *
+ * ```txt
  *       foo://example.com:8042/over/there?name=ferret#nose
  *       \_/   \______________/\_________/ \_________/ \__/
  *        |           |            |            |        |
@@ -539,6 +539,7 @@ const _regexp = /^(([^:/?#]+?):)?(\/\/([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/;
  *        |   _____________________|__
  *       / \ /                        \
  *       urn:example:animal:ferret:nose
+ * ```
  */
 export class URI implements UriComponents {
 
@@ -651,7 +652,7 @@ export class URI implements UriComponents {
 		// if (this.scheme !== 'file') {
 		// 	console.warn(`[UriError] calling fsPath with scheme ${this.scheme}`);
 		// }
-		return _makeFsPath(this);
+		return uriToFsPath(this, false);
 	}
 
 	// ---- modify to new -------------------------
@@ -716,10 +717,10 @@ export class URI implements UriComponents {
 		}
 		return new _URI(
 			match[2] || _empty,
-			decodeURIComponent(match[4] || _empty),
-			decodeURIComponent(match[5] || _empty),
-			decodeURIComponent(match[7] || _empty),
-			decodeURIComponent(match[9] || _empty),
+			percentDecode(match[4] || _empty),
+			percentDecode(match[5] || _empty),
+			percentDecode(match[7] || _empty),
+			percentDecode(match[9] || _empty),
 			_strict
 		);
 	}
@@ -782,6 +783,26 @@ export class URI implements UriComponents {
 		);
 	}
 
+	// /**
+	//  * Join a URI path with path fragments and normalizes the resulting path.
+	//  *
+	//  * @param uri The input URI.
+	//  * @param pathFragment The path fragment to add to the URI path.
+	//  * @returns The resulting URI.
+	//  */
+	// static joinPath(uri: URI, ...pathFragment: string[]): URI {
+	// 	if (!uri.path) {
+	// 		throw new Error(`[UriError]: cannot call joinPaths on URI without path`);
+	// 	}
+	// 	let newPath: string;
+	// 	if (isWindows && uri.scheme === 'file') {
+	// 		newPath = URI.file(paths.win32.join(uriToFsPath(uri, true), ...pathFragment)).path;
+	// 	} else {
+	// 		newPath = paths.posix.join(uri.path, ...pathFragment);
+	// 	}
+	// 	return uri.with({ path: newPath });
+	// }
+
 	// ---- printing/externalize ---------------------------
 
 	/**
@@ -838,7 +859,7 @@ interface UriState extends UriComponents {
 
 const _pathSepMarker = isWindows ? 1 : undefined;
 
-// tslint:disable-next-line:class-name
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 class _URI extends URI {
 
 	_formatted: string | null = null;
@@ -846,7 +867,7 @@ class _URI extends URI {
 
 	get fsPath(): string {
 		if (!this._fsPath) {
-			this._fsPath = _makeFsPath(this);
+			this._fsPath = uriToFsPath(this, false);
 		}
 		return this._fsPath;
 	}
@@ -1002,7 +1023,7 @@ function encodeURIComponentMinimal(path: string): string {
 /**
  * Compute `fsPath` for the given uri
  */
-function _makeFsPath(uri: URI): string {
+export function uriToFsPath(uri: URI, keepDriveLetterCasing: boolean): string {
 
 	let value: string;
 	if (uri.authority && uri.path.length > 1 && uri.scheme === 'file') {
@@ -1013,8 +1034,12 @@ function _makeFsPath(uri: URI): string {
 		&& (uri.path.charCodeAt(1) >= CharCode.A && uri.path.charCodeAt(1) <= CharCode.Z || uri.path.charCodeAt(1) >= CharCode.a && uri.path.charCodeAt(1) <= CharCode.z)
 		&& uri.path.charCodeAt(2) === CharCode.Colon
 	) {
-		// windows drive letter: file:///c:/far/boo
-		value = uri.path[1].toLowerCase() + uri.path.substr(2);
+		if (!keepDriveLetterCasing) {
+			// windows drive letter: file:///c:/far/boo
+			value = uri.path[1].toLowerCase() + uri.path.substr(2);
+		} else {
+			value = uri.path.substr(1);
+		}
 	} else {
 		// other path
 		value = uri.path;
@@ -1096,4 +1121,27 @@ function _asFormatted(uri: URI, skipEncoding: boolean): string {
 		res += !skipEncoding ? encodeURIComponentFast(fragment, false) : fragment;
 	}
 	return res;
+}
+
+// --- decode
+
+function decodeURIComponentGraceful(str: string): string {
+	try {
+		return decodeURIComponent(str);
+	} catch {
+		if (str.length > 3) {
+			return str.substr(0, 3) + decodeURIComponentGraceful(str.substr(3));
+		} else {
+			return str;
+		}
+	}
+}
+
+const _rEncodedAsHex = /(%[0-9A-Za-z][0-9A-Za-z])+/g;
+
+function percentDecode(str: string): string {
+	if (!str.match(_rEncodedAsHex)) {
+		return str;
+	}
+	return str.replace(_rEncodedAsHex, (match) => decodeURIComponentGraceful(match));
 }
