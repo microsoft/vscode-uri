@@ -6,8 +6,8 @@
 
 //#region util
 // Copying/Replacing
-// https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/platform.ts
-// https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/charCode.ts
+// https://github.com/microsoft/vscode/blob/master/src/vs/base/common/platform.ts
+// https://github.com/microsoft/vscode/blob/master/src/vs/base/common/charCode.ts
 
 declare const process: { platform: 'win32' };
 declare const navigator: { userAgent: string };
