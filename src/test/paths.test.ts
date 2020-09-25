@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import 'mocha';
 import * as assert from 'assert';
-import { joinPath, resolvePath, extname, URI } from '../index';
+import { joinPath, resolvePath, extname, basename, URI } from '../index';
 import { posix } from 'path';
 
 suite('URI path operations', () => {
@@ -92,4 +92,21 @@ suite('URI path operations', () => {
 		assertExtName('foo://a/foo/a.foo/', '.foo');
 		assertExtName('foo://a/foo/a.foo//', '.foo');
 	});
+
+	test('basename', () => {
+		function assertBasename(input: string, expected: string) {
+            const testUri = URI.parse(input);
+			assert.strictEqual(basename(testUri), expected, input);
+			assert.strictEqual(posix.basename(testUri.path), expected, input + ' (nodejs)');
+		}
+
+		assertBasename('foo://a/some/file/test.txt', 'test.txt');
+		assertBasename('foo://a/some/file/', 'file');
+		assertBasename('foo://a/some/file///', 'file');
+		assertBasename('foo://a/some/file', 'file');
+		assertBasename('foo://a/some', 'some');
+		assertBasename('foo://a/', '');
+		assertBasename('foo://a', '');
+	});
+	
 });

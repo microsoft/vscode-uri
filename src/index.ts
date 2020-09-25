@@ -1154,7 +1154,7 @@ function percentDecode(str: string): string {
  * If the path is not absolute, the resolved path will be a join of URI path and the input path.
  * 
  * The resolved path is normalized:
- *  - all '..' and '.' segments are resolved.
+ *  - all '..' and '.' segments are resolved. Resolving uses posix 
  *  - multiple, sequential occurences of '/' are replaced by a single instance of '/'.
  *  - trailing separators are preserved.
  * 
@@ -1215,7 +1215,7 @@ function normalizePath(parts: string[]): string {
 	return res;
 }
 /**
- * Returns the last segment of the path of a URI, similar to the Unix dirname` command. 
+ * Returns the last segment of the path of a URI, similar to the Unix dirname command. 
  * In the path, '/' is recognized as the directory separation character. Trailing directory separators are ignored.
  * The empty string is returned if the URI's path is empty or does not contain any path segments.
  * 
@@ -1227,10 +1227,12 @@ export function basename(uri: URI): string {
 	let lastSlash = path.length;
 	for (let i = path.length - 1; i >= 0; i--) {
 		const ch = path.charCodeAt(i);
-		if (i < lastSlash - 1) {
-			return path.substr(i + 1, lastSlash);
+		if (ch === CharCode.Slash) {
+			if (i < lastSlash - 1) {
+				return path.substring(i + 1, lastSlash);
+			}
+			lastSlash = i;
 		}
-		lastSlash = i;
 	}
 	return '';
 }
