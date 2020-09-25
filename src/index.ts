@@ -1154,7 +1154,7 @@ function percentDecode(str: string): string {
  * If the path is not absolute, the resolved path will be a join of URI path and the input path.
  * 
  * The resolved path is normalized:
- *  - all '..' and '.' segments are resolved. Resolving uses posix 
+ *  - all '..' and '.' segments are resolved. 
  *  - multiple, sequential occurences of '/' are replaced by a single instance of '/'.
  *  - trailing separators are preserved.
  * 
@@ -1220,7 +1220,7 @@ function normalizePath(parts: string[]): string {
  * The empty string is returned if the URI's path is empty or does not contain any path segments.
  * 
  * @param uri The input URI
- * @return The directory name of the 
+ * @return The last segment of the URIs path 
  */
 export function basename(uri: URI): string {
 	const path = uri.path;
@@ -1240,12 +1240,12 @@ export function basename(uri: URI): string {
 /**
  * Returns the extension name of the path of a URI, similar to the Unix extname command. 
  * In the path, '/' is recognized as the directory separation character. Trailing directory separators are ignored.
- * The empty string is returned if the URI's path is empty or does not contain ant path segments.
+ * The empty string is returned if the URI's path is empty or does not contain any path segments.
  * 
  * @param uri The input URI
  * @return The extension name of the URIs path.
  */
-export function extname(uri: URI) {
+export function extname(uri: URI) : string {
 	const path = uri.path;
 	let lastSlash = path.length;
 	for (let i = path.length - 1; i >= 0; i--) {
