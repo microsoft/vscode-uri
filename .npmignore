@@ -1,3 +1,8 @@
 src/
+lib/esm/test/
+lib/umd/test/
+.vscode
 spec
 tsconfig.json
+.mocharc.json
+.travis.yml

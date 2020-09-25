@@ -1145,3 +1145,122 @@ function percentDecode(str: string): string {
 	}
 	return str.replace(_rEncodedAsHex, (match) => decodeURIComponentGraceful(match));
 }
+
+/**
+ * Resolves a path against the path of a URI. 
+ * In the paths '/' is recognized as the directory separation character. 
+ * 
+ * If the path is absolute (starting with '/'), the resolved path will be equal to the absolute path. 
+ * If the path is not absolute, the resolved path will be a join of URI path and the input path.
+ * 
+ * The resolved path is normalized:
+ *  - all '..' and '.' segments are resolved.
+ *  - multiple, sequential occurences of '/' are replaced by a single instance of '/'.
+ *  - trailing separators are preserved.
+ * 
+ * @param uri The input URI
+ * @param path The path to resolve against the path of URI
+ * @returns A URI with the resolved path. All other properties of the URI (scheme, authority, query, fragments, ...) will be copied from the input URI.
+ */
+export function resolvePath(uri: URI, path: string): URI {
+	if (isAbsolutePath(path)) {
+		return uri.with({ path: normalizePath(path.split('/')) });
+	}
+	return joinPath(uri, path);
+}
+
+/**
+ * Joins one or more input paths to the path of URI. 
+ * In the paths '/' is recognized as the directory separation character. 
+ * 
+ * The resolved path is normalized:
+ *  - all '..' and '.' segments are resolved.
+ *  - multiple, sequential occurences of '/' are replaced by a single instance of '/'.
+ *  - trailing separators are preserved.
+ * 
+ * @param uri The input URI
+ * @param paths The paths to be join with the path of URI
+ * @returns A URI with the joined path. All other properties of the URI (scheme, authority, query, fragments, ...) will be copied from the input URI.
+ */
+export function joinPath(uri: URI, ...paths: string[]): URI {
+	const parts = uri.path.split('/');
+	for (let path of paths) {
+		parts.push(...path.split('/'));
+	}
+	return uri.with({ path: normalizePath(parts) });
+}
+
+function isAbsolutePath(path: string) {
+	return path.charCodeAt(0) === CharCode.Slash;
+}
+
+function normalizePath(parts: string[]): string {
+	const newParts: string[] = [];
+	for (const part of parts) {
+		if (part.length === 0 || part.length === 1 && part.charCodeAt(0) === CharCode.Period) {
+			// ignore
+		} else if (part.length === 2 && part.charCodeAt(0) === CharCode.Period && part.charCodeAt(1) === CharCode.Period) {
+			newParts.pop();
+		} else {
+			newParts.push(part);
+		}
+	}
+	if (parts.length > 1 && parts[parts.length - 1].length === 0) {
+		newParts.push('');
+	}
+	let res = newParts.join('/');
+	if (parts[0].length === 0) {
+		res = '/' + res;
+	}
+	return res;
+}
+/**
+ * Returns the last segment of the path of a URI, similar to the Unix dirname` command. 
+ * In the path, '/' is recognized as the directory separation character. Trailing directory separators are ignored.
+ * The empty string is returned if the URI's path is empty or does not contain any path segments.
+ * 
+ * @param uri The input URI
+ * @return The directory name of the 
+ */
+export function basename(uri: URI): string {
+	const path = uri.path;
+	let lastSlash = path.length;
+	for (let i = path.length - 1; i >= 0; i--) {
+		const ch = path.charCodeAt(i);
+		if (i < lastSlash - 1) {
+			return path.substr(i + 1, lastSlash);
+		}
+		lastSlash = i;
+	}
+	return '';
+}
+
+/**
+ * Returns the extension name of the path of a URI, similar to the Unix extname command. 
+ * In the path, '/' is recognized as the directory separation character. Trailing directory separators are ignored.
+ * The empty string is returned if the URI's path is empty or does not contain ant path segments.
+ * 
+ * @param uri The input URI
+ * @return The extension name of the URIs path.
+ */
+export function extname(uri: URI) {
+	const path = uri.path;
+	let lastSlash = path.length;
+	for (let i = path.length - 1; i >= 0; i--) {
+		const ch = path.charCodeAt(i);
+		if (ch === CharCode.Period) {
+			if (i > 0 && path.charCodeAt(i - 1) !== CharCode.Slash) {
+				return path.substring(i, lastSlash);
+			} else {
+				break;
+			}
+		} else if (ch === CharCode.Slash) {
+			if (i < lastSlash - 1) {
+				// there was content, but no dot
+				break;
+			}
+			lastSlash = i;
+		}
+	}
+	return '';
+}

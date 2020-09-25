@@ -8,7 +8,8 @@
   "module": "./lib/esm/index.js",
   "scripts": {
     "compile": "tsc -p ./src && tsc -p ./src/tsconfig.esm.json",
-    "prepublish": "npm run compile"
+    "prepublish": "npm run test",
+    "test": "npm run compile && mocha"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,9 @@
   },
   "homepage": "https://github.com/Microsoft/vscode-uri#readme",
   "devDependencies": {
-    "typescript": "^3.6.4"
+    "@types/mocha":"^8.0.3",
+    "@types/node": "^10.12.21",
+    "typescript": "^3.6.4",
+    "mocha": "8.1.3"
   }
 }
