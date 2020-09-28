@@ -9,6 +9,9 @@
 // https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/platform.ts
 // https://github.com/Microsoft/vscode/blob/master/src/vs/base/common/charCode.ts
 
+import * as nodePath from 'path';
+const posixPath = nodePath.posix || nodePath;
+
 declare const process: { platform: 'win32' };
 declare const navigator: { userAgent: string };
 let isWindows: boolean;
@@ -1147,122 +1150,75 @@ function percentDecode(str: string): string {
 }
 
 /**
- * Resolves a path against the path of a URI. 
- * In the paths '/' is recognized as the directory separation character. 
+ * Resolves one or more paths against the path of a URI. 
+ * '/' is used as the directory separation character. 
  * 
- * If the path is absolute (starting with '/'), the resolved path will be equal to the absolute path. 
- * If the path is not absolute, the resolved path will be a join of URI path and the input path.
- * 
- * The resolved path is normalized:
+ * The resolved path will be normalized. That means:
  *  - all '..' and '.' segments are resolved. 
  *  - multiple, sequential occurences of '/' are replaced by a single instance of '/'.
- *  - trailing separators are preserved.
+ *  - trailing separators are removed.
  * 
- * @param uri The input URI
- * @param path The path to resolve against the path of URI
- * @returns A URI with the resolved path. All other properties of the URI (scheme, authority, query, fragments, ...) will be copied from the input URI.
+ * @param uri The input URI.
+ * @param paths The paths to resolve against the path of URI.
+ * @returns A URI with the resolved path. All other properties of the URI (scheme, authority, query, fragments, ...) will be taken from the input URI.
  */
-export function resolvePath(uri: URI, path: string): URI {
-	if (isAbsolutePath(path)) {
-		return uri.with({ path: normalizePath(path.split('/')) });
-	}
-	return joinPath(uri, path);
+export function resolvePath(uri: URI, ...paths: string[]): URI {
+	return uri.with({ path: posixPath.resolve(uri.path, ...paths) });
 }
 
 /**
  * Joins one or more input paths to the path of URI. 
- * In the paths '/' is recognized as the directory separation character. 
+ * '/' is used as the directory separation character. 
  * 
- * The resolved path is normalized:
+ * The resolved path will be normalized. That means:
  *  - all '..' and '.' segments are resolved.
  *  - multiple, sequential occurences of '/' are replaced by a single instance of '/'.
  *  - trailing separators are preserved.
  * 
- * @param uri The input URI
- * @param paths The paths to be join with the path of URI
- * @returns A URI with the joined path. All other properties of the URI (scheme, authority, query, fragments, ...) will be copied from the input URI.
+ * @param uri The input URI.
+ * @param paths The paths to be joined with the path of URI.
+ * @returns A URI with the joined path. All other properties of the URI (scheme, authority, query, fragments, ...) will be taken from the input URI.
  */
 export function joinPath(uri: URI, ...paths: string[]): URI {
-	const parts = uri.path.split('/');
-	for (let path of paths) {
-		parts.push(...path.split('/'));
-	}
-	return uri.with({ path: normalizePath(parts) });
+	return uri.with({ path: posixPath.join(uri.path, ...paths) });
 }
 
-function isAbsolutePath(path: string) {
-	return path.charCodeAt(0) === CharCode.Slash;
-}
-
-function normalizePath(parts: string[]): string {
-	const newParts: string[] = [];
-	for (const part of parts) {
-		if (part.length === 0 || part.length === 1 && part.charCodeAt(0) === CharCode.Period) {
-			// ignore
-		} else if (part.length === 2 && part.charCodeAt(0) === CharCode.Period && part.charCodeAt(1) === CharCode.Period) {
-			newParts.pop();
-		} else {
-			newParts.push(part);
-		}
-	}
-	if (parts.length > 1 && parts[parts.length - 1].length === 0) {
-		newParts.push('');
-	}
-	let res = newParts.join('/');
-	if (parts[0].length === 0) {
-		res = '/' + res;
-	}
-	return res;
-}
 /**
- * Returns the last segment of the path of a URI, similar to the Unix dirname command. 
+ * Returns a URI where the path is the directory name of the input uri, similar to the Unix dirname command. 
  * In the path, '/' is recognized as the directory separation character. Trailing directory separators are ignored.
- * The empty string is returned if the URI's path is empty or does not contain any path segments.
+ * The orignal URI is returned if the URIs path is empty or does not contain any path segments.
  * 
- * @param uri The input URI
- * @return The last segment of the URIs path 
+ * @param uri The input URI.
+ * @return The last segment of the URIs path.
+ */
+export function dirname(uri: URI): URI {
+	let path = posixPath.dirname(uri.path);
+	if (path.length === 1 && path.charCodeAt(0) === CharCode.Period) {
+		return uri;
+	}
+	return uri.with({ path });
+}
+
+/**
+ * Returns the last segment of the path of a URI, similar to the Unix basename command. 
+ * In the path, '/' is recognized as the directory separation character. Trailing directory separators are ignored.
+ * The empty string is returned if the URIs path is empty or does not contain any path segments.
+ * 
+ * @param uri The input URI.
+ * @return The base name of the URIs path.
  */
 export function basename(uri: URI): string {
-	const path = uri.path;
-	let lastSlash = path.length;
-	for (let i = path.length - 1; i >= 0; i--) {
-		const ch = path.charCodeAt(i);
-		if (ch === CharCode.Slash) {
-			if (i < lastSlash - 1) {
-				return path.substring(i + 1, lastSlash);
-			}
-			lastSlash = i;
-		}
-	}
-	return '';
+	return posixPath.basename(uri.path);
 }
 
 /**
  * Returns the extension name of the path of a URI, similar to the Unix extname command. 
  * In the path, '/' is recognized as the directory separation character. Trailing directory separators are ignored.
- * The empty string is returned if the URI's path is empty or does not contain any path segments.
+ * The empty string is returned if the URIs path is empty or does not contain any path segments.
  * 
- * @param uri The input URI
+ * @param uri The input URI.
  * @return The extension name of the URIs path.
  */
-export function extname(uri: URI) : string {
-	const path = uri.path;
-	let lastSlash = path.length;
-	for (let i = path.length - 1; i >= 0; i--) {
-		const ch = path.charCodeAt(i);
-		if (ch === CharCode.Period) {
-			if (i > 0 && path.charCodeAt(i - 1) !== CharCode.Slash) {
-				return path.substring(i, lastSlash);
-			} else {
-				break;
-			}
-		} else if (ch === CharCode.Slash) {
-			if (i < lastSlash - 1) {
-				// there was content, but no dot
-				break;
-			}
-			lastSlash = i;
-		}
-	}
-	return '';
+export function extname(uri: URI): string {
+	return posixPath.extname(uri.path);
 }

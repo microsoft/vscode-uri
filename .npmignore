@@ -6,3 +6,4 @@ spec
 tsconfig.json
 .mocharc.json
 .travis.yml
+webpack.config.js
