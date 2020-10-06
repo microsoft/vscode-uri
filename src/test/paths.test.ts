@@ -4,14 +4,14 @@
  *--------------------------------------------------------------------------------------------*/
 import 'mocha';
 import * as assert from 'assert';
-import { joinPath, resolvePath, extname, basename, dirname, URI } from '../index';
+import {  URI } from '../index';
 import { posix } from 'path';
 
 suite('URI path operations', () => {
 	test('join', async function () {
 		function assertJoin(uri: string, paths: string[], expected: string, verifyAgainstNodeJS = true) {
 			const testUri = URI.parse(uri);
-			assert.strictEqual(joinPath(testUri, ...paths).toString(), expected, uri);
+			assert.strictEqual(URI.joinPath(testUri, ...paths).toString(), expected, uri);
 			if (verifyAgainstNodeJS) {
 				assert.strictEqual(posix.join(testUri.path || '/', ...paths), URI.parse(expected).path, testUri.path + ' (nodejs)');
 			}
@@ -29,7 +29,7 @@ suite('URI path operations', () => {
 	test('resolve', async function () {
 		function assertResolve(uri: string, path: string, expected: string, verifyAgainstNodeJS = true) {
 			const testUri = URI.parse(uri);
-			assert.strictEqual(resolvePath(testUri, path).toString(), expected, uri);
+			assert.strictEqual(URI.resolvePath(testUri, path).toString(), expected, uri);
 			if (verifyAgainstNodeJS) {
 				assert.strictEqual(posix.resolve(testUri.path || '/', path), URI.parse(expected).path, testUri.path + ' (nodejs)');
 			}
@@ -49,7 +49,7 @@ suite('URI path operations', () => {
 	test('normalize', async function () {
 		function assertNormalize(path: string, expected: string, verifyAgainstNodeJS = true) {
 			let testUri = URI.from({ scheme: 'foo', path, authority: path.startsWith('/') ? 'bar' : undefined });
-			const actual = joinPath(testUri).path;
+			const actual = URI.joinPath(testUri).path;
 			assert.strictEqual(actual, expected, path);
 			if (verifyAgainstNodeJS) {
 				assert.strictEqual(posix.normalize(path), expected, path + ' (nodejs)');
@@ -82,7 +82,7 @@ suite('URI path operations', () => {
 	test('extname', async function () {
 		function assertExtName(input: string, expected: string, verifyAgainstNodeJS = true) {
 			const testUri = URI.parse(input);
-			assert.strictEqual(extname(testUri), expected, input);
+			assert.strictEqual(URI.extname(testUri), expected, input);
 			if (verifyAgainstNodeJS) {
 				assert.strictEqual(posix.extname(input), expected, input + ' (nodejs)');
 			}
@@ -98,7 +98,7 @@ suite('URI path operations', () => {
 	test('basename', () => {
 		function assertBasename(input: string, expected: string, verifyAgainstNodeJS = true) {
 			const testUri = URI.parse(input);
-			assert.strictEqual(basename(testUri), expected, input);
+			assert.strictEqual(URI.basename(testUri), expected, input);
 			if (verifyAgainstNodeJS) {
 				assert.strictEqual(posix.basename(testUri.path), expected, input + ' (nodejs)');
 			}
@@ -116,7 +116,7 @@ suite('URI path operations', () => {
 	test('dirname', () => {
 		function assertDirname(input: string, expected: string, verifyAgainstNodeJS = true) {
 			const testUri = URI.parse(input);
-			assert.strictEqual(dirname(testUri).toString(), expected, input);
+			assert.strictEqual(URI.dirname(testUri).toString(), expected, input);
 			if (verifyAgainstNodeJS) {
 				assert.strictEqual(posix.dirname(testUri.path), URI.parse(expected).path, input + ' (nodejs)');
 			}
