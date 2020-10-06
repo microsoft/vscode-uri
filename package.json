@@ -6,9 +6,13 @@
   "main": "./lib/umd/index.js",
   "typings": "./lib/umd/index",
   "module": "./lib/esm/index.js",
+  "sideEffects": false,
   "scripts": {
-    "compile": "tsc -p ./src && tsc -p ./src/tsconfig.esm.json",
-    "prepublish": "npm run compile"
+    "clean": "rimraf lib",
+    "pack-production": "webpack --mode=production",
+    "pack-dev": "webpack",
+    "prepublish": "npm run test && npm run clean && npm run pack-production",
+    "test": "tsc -p ./src && npm run pack-dev && mocha"
   },
   "repository": {
     "type": "git",
@@ -20,6 +24,14 @@
   },
   "homepage": "https://github.com/Microsoft/vscode-uri#readme",
   "devDependencies": {
-    "typescript": "^3.6.4"
+    "@purtuga/esm-webpack-plugin": "^1.4.0",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^10.12.21",
+    "mocha": "8.1.3",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^8.0.4",
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
   }
 }
