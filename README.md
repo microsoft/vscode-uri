@@ -45,6 +45,19 @@ assert.ok(uri.fragment === '');
 assert.ok(uri.toString() === 'file:///users/me/c%23-projects/')
 ```
 
+## Usage: Util
+
+This module also exports a `Utils` package which is an extension, not part of `vscode.Uri`, and useful for path-math. There is: 
+
+* `Utils.joinPath(URI, paths): URI`
+* `Utils.resolvePath(URI, paths): URI`
+* `Utils.dirname(URI): string`
+* `Utils.basename(URI): string`
+* `Utils.extname(URI): string`
+
+All util use posix path-math as defined by the node.js path module. 
+
+
 ## Contributing
 
 The source of this module is taken straight from the [vscode](https://github.com/microsoft/vscode)-sources and because of that issues and pull request should be created in that repository. Thanks and Happy Coding!
