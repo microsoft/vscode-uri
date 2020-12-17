@@ -16,13 +16,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/vscode-uri.git"
+    "url": "git+https://github.com/microsoft/vscode-uri.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-uri/issues"
+    "url": "https://github.com/microsoft/vscode-uri/issues"
   },
-  "homepage": "https://github.com/Microsoft/vscode-uri#readme",
+  "homepage": "https://github.com/microsoft/vscode-uri#readme",
   "devDependencies": {
     "@purtuga/esm-webpack-plugin": "^1.4.0",
     "@types/mocha": "^8.0.3",

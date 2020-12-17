@@ -47,7 +47,7 @@ assert.ok(uri.toString() === 'file:///users/me/c%23-projects/')
 
 ## Contributing
 
-The source of this module is taken straight from the [vscode](https://github.com/Microsoft/vscode)-sources and because of that issues and pull request should be created in that repository. Thanks and Happy Coding!
+The source of this module is taken straight from the [vscode](https://github.com/microsoft/vscode)-sources and because of that issues and pull request should be created in that repository. Thanks and Happy Coding!
 
 ## Code of Conduct
 
