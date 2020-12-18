@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 
 const path = require('path');
-const EsmWebpackPlugin = require('@purtuga/esm-webpack-plugin');
 
 module.exports = [
     // UMD
@@ -13,7 +12,10 @@ module.exports = [
         entry: './src/index.ts',
         resolve: {
             mainFields: ['module', 'main'],
-            extensions: ['.ts', '.js'] // support ts-files and js-files
+            extensions: ['.ts', '.js'], // support ts-files and js-files
+            fallback: {
+                path: require.resolve('path-browserify')
+            }
         },
         output: {
             libraryTarget: 'umd',
@@ -45,7 +47,10 @@ module.exports = [
         entry: './src/index.ts',
         resolve: {
             mainFields: ['module', 'main'],
-            extensions: ['.ts', '.js'] // support ts-files and js-files
+            extensions: ['.ts', '.js'], // support ts-files and js-files
+            fallback: {
+                path: require.resolve('path-browserify')
+            }
         },
         output: {
             library: 'LIB',
@@ -76,9 +81,6 @@ module.exports = [
                 }]
             }]
         },
-        devtool: 'source-map',
-        plugins: [
-            new EsmWebpackPlugin()
-        ]
+        devtool: 'source-map'
     }
 ]

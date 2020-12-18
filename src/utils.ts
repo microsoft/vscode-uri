@@ -45,7 +45,8 @@ export namespace Utils {
      * @returns A URI with the resolved path. All other properties of the URI (scheme, authority, query, fragments, ...) will be taken from the input URI.
      */
     export function resolvePath(uri: URI, ...paths: string[]): URI {
-        return uri.with({ path: posixPath.resolve(uri.path, ...paths) });
+        const path = uri.path || '/'; // normalize the path which is necessary as for posixPath.resolve the first segments has to be absolute or cwd is used.
+        return uri.with({ path: posixPath.resolve(path, ...paths) });
     }
 
     /**
