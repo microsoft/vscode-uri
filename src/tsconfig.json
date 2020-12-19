@@ -7,6 +7,7 @@
         "lib": [
             "es2015"
         ],
-        "outDir": "../lib/umd"
+        "outDir": "../lib/umd",
+        "downlevelIteration": true
     }
 }
