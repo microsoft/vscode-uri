@@ -6,7 +6,8 @@
 const path = require('path');
 
 
-module.exports = [
+/** @type {import('webpack').Configuration[]} */
+const config = [
     // UMD
     {
         mode: 'none',
@@ -57,7 +58,7 @@ module.exports = [
             library: 'LIB',
             libraryTarget: 'var',
             path: path.resolve(__dirname, 'lib', 'esm'),
-            filename: 'index.js'
+            filename: 'index.mjs'
         },
         module: {
             rules: [{
@@ -101,3 +102,5 @@ module.exports = [
         ]
     }
 ]
+
+module.exports = config
