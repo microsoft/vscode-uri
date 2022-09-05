@@ -6,7 +6,8 @@
   "main": "./lib/umd/index.js",
   "exports": {
     "import": "./lib/esm/index.mjs",
-    "require": "./lib/umd/index.js"
+    "require": "./lib/umd/index.js",
+    "types": "./lib/umd/index.d.ts"
   },
   "typings": "./lib/umd/index",
   "module": "./lib/esm/index.js",
