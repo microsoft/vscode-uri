@@ -24,6 +24,7 @@ suite('URI path operations', () => {
 		assertJoin('foo://a/foo/bar/', ['x/', '/y'], 'foo://a/foo/bar/x/y');
 		assertJoin('foo://a/foo/bar/', ['.', '/y'], 'foo://a/foo/bar/y');
 		assertJoin('foo://a/foo/bar/', ['x/y/z', '..'], 'foo://a/foo/bar/x/y');
+		assertJoin('untitled:untitled-1', ['..', 'untitled-2'], 'untitled:untitled-2');
 	});
 
 	test('resolve', async function () {
@@ -44,6 +45,7 @@ suite('URI path operations', () => {
 
 		assertResolve('foo://a/b', '/x/..//y/.', 'foo://a/y');
 		assertResolve('foo://a/b', 'x/..//y/.', 'foo://a/b/y');
+		assertResolve('untitled:untitled-1', '../foo', 'untitled:foo', false);
 	});
 
 	test('normalize', async function () {
@@ -77,6 +79,7 @@ suite('URI path operations', () => {
 		assertNormalize('/a/n/../../..', '/');
 		assertNormalize('..', '..');
 		assertNormalize('/..', '/');
+		assertNormalize('untitled-1/foo/bar/.', 'untitled-1/foo/bar');
 	});
 
 	test('extname', async function () {
@@ -93,6 +96,7 @@ suite('URI path operations', () => {
 
 		assertExtName('foo://a/foo/a.foo/', '.foo');
 		assertExtName('foo://a/foo/a.foo//', '.foo');
+		assertExtName('untitled:untitled-1', '');
 	});
 
 	test('basename', () => {
@@ -111,6 +115,7 @@ suite('URI path operations', () => {
 		assertBasename('foo://a/some', 'some');
 		assertBasename('foo://a/', '');
 		assertBasename('foo://a', '');
+		assertBasename('untitled:untitled-1', 'untitled-1');
 	});
 
 	test('dirname', () => {
@@ -129,6 +134,7 @@ suite('URI path operations', () => {
 		assertDirname('foo://a/', 'foo://a/');
 		assertDirname('foo://a', 'foo://a', false);
 		assertDirname('foo://', 'foo:', false);
+		assertDirname('untitled:untitled-1', 'untitled:', false);
 	});
 
 });

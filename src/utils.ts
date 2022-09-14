@@ -10,6 +10,7 @@ import { URI } from './uri';
 import * as nodePath from 'path';
 
 const posixPath = nodePath.posix || nodePath;
+const slash = '/';
 
 export namespace Utils {
 
@@ -45,8 +46,17 @@ export namespace Utils {
      * @returns A URI with the resolved path. All other properties of the URI (scheme, authority, query, fragments, ...) will be taken from the input URI.
      */
     export function resolvePath(uri: URI, ...paths: string[]): URI {
-        const path = uri.path || '/'; // normalize the path which is necessary as for posixPath.resolve the first segments has to be absolute or cwd is used.
-        return uri.with({ path: posixPath.resolve(path, ...paths) });
+        let path = uri.path || slash; // normalize the path which is necessary as for posixPath.resolve the first segments has to be absolute or cwd is used.
+        let slashAdded = false;
+        if (path[0] !== slash) {
+            path = slash + path;
+            slashAdded = true;
+        }
+        let resolvedPath = posixPath.resolve(path, ...paths);
+        if (slashAdded && resolvedPath[0] === slash) {
+            resolvedPath = resolvedPath.substring(1);
+        }
+        return uri.with({ path: resolvedPath });
     }
 
     /**
@@ -58,9 +68,12 @@ export namespace Utils {
      * @return The last segment of the URIs path.
      */
     export function dirname(uri: URI): URI {
+        if (uri.path.length === 0 || uri.path === '/') {
+            return uri;
+        }
         let path = posixPath.dirname(uri.path);
         if (path.length === 1 && path.charCodeAt(0) === CharCode.Period) {
-            return uri;
+            path = '';
         }
         return uri.with({ path });
     }
