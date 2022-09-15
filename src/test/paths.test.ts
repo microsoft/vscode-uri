@@ -46,6 +46,10 @@ suite('URI path operations', () => {
 		assertResolve('foo://a/b', '/x/..//y/.', 'foo://a/y');
 		assertResolve('foo://a/b', 'x/..//y/.', 'foo://a/b/y');
 		assertResolve('untitled:untitled-1', '../foo', 'untitled:foo', false);
+		assertResolve('untitled:', 'foo', 'untitled:foo', false);
+		assertResolve('untitled:', '..', 'untitled:', false);
+		assertResolve('untitled:', '/foo', 'untitled:foo', false);
+		assertResolve('untitled:/', '/foo', 'untitled:/foo', false);
 	});
 
 	test('normalize', async function () {
