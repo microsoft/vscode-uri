@@ -46,14 +46,14 @@ export namespace Utils {
      * @returns A URI with the resolved path. All other properties of the URI (scheme, authority, query, fragments, ...) will be taken from the input URI.
      */
     export function resolvePath(uri: URI, ...paths: string[]): URI {
-        let path = uri.path || slash; // normalize the path which is necessary as for posixPath.resolve the first segments has to be absolute or cwd is used.
+        let path = uri.path; 
         let slashAdded = false;
         if (path[0] !== slash) {
-            path = slash + path;
+            path = slash + path; // make the path abstract: for posixPath.resolve the first segments has to be absolute or cwd is used.
             slashAdded = true;
         }
         let resolvedPath = posixPath.resolve(path, ...paths);
-        if (slashAdded && resolvedPath[0] === slash) {
+        if (slashAdded && resolvedPath[0] === slash && !uri.authority) {
             resolvedPath = resolvedPath.substring(1);
         }
         return uri.with({ path: resolvedPath });
@@ -68,7 +68,7 @@ export namespace Utils {
      * @return The last segment of the URIs path.
      */
     export function dirname(uri: URI): URI {
-        if (uri.path.length === 0 || uri.path === '/') {
+        if (uri.path.length === 0 || uri.path === slash) {
             return uri;
         }
         let path = posixPath.dirname(uri.path);
