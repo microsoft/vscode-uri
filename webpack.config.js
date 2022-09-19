@@ -74,6 +74,7 @@ module.exports = [
                             forceConsistentCasingInFileNames: true,
                             noImplicitAny: true,
                             module: 'es6',
+                            declaration: false,
                             lib: [
                                 'es2015'
                             ]
