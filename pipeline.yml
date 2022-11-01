@@ -38,15 +38,15 @@ extends:
           - script: yarn compile
             displayName: Compile npm package
 
+          - script: yarn pack-production
+            displayName: Webpack for prod
+
         testSteps:
           - bash: |
               /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
               echo ">>> Started xvfb"
             displayName: Start xvfb
             condition: eq(variables['Agent.OS'], 'Linux')
-
-          - script: yarn --frozen-lockfile
-            displayName: Install dependencies 
 
           - script: yarn test
             displayName: Test npm package
