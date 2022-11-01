@@ -11,7 +11,8 @@
     "clean": "rimraf lib",
     "pack-production": "webpack --mode=production",
     "pack-dev": "webpack",
-    "prepublish": "npm run test && npm run clean && npm run pack-production",
+    "compile": "tsc -p ./src",
+    "prepublish": "npm run pack-production",
     "test": "tsc -p ./src && npm run pack-dev && mocha"
   },
   "repository": {
