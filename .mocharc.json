@@ -1,5 +1,8 @@
 {
     "ui": "tdd",
     "color": true,
-    "spec": "./lib/umd/test/*.test.js"
+    "spec": [
+        "./lib/cjs/test/*.test.js",
+        "./lib/esm/test/*.test.js"
+    ]
 }

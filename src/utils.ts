@@ -5,11 +5,10 @@
 
 'use strict';
 
-import { CharCode } from './charCode';
-import { URI } from './uri';
-import * as nodePath from 'path';
+import { CharCode } from './charCode.js';
+import { URI } from './uri.js';
+import * as posixPath from '#path';
 
-const posixPath = nodePath.posix || nodePath;
 const slash = '/';
 
 export namespace Utils {

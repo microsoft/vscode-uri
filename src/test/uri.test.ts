@@ -3,8 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 import * as assert from 'assert';
-import { URI } from '../index';
-import { isWindows } from '../platform';
+import { URI } from '../index.js';
+import { isWindows } from '../platform.js';
 
 interface UriComponents {
     scheme: string;

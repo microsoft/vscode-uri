@@ -2,3 +2,4 @@ node_modules
 lib/
 spec/*.js
 *.lsif
+*.tgz

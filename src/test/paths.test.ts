@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 import 'mocha';
 import * as assert from 'assert';
-import { URI, Utils } from '../index';
+import { URI, Utils } from '../index.js';
 import { posix } from 'path';
 
 suite('URI path operations', () => {

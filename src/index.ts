@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 'use strict';
 
-import { URI } from './uri';
-import { Utils } from './utils';
+import { URI } from './uri.js';
+import { Utils } from './utils.js';
 
 export { URI, Utils }
