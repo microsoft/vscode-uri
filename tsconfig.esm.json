@@ -5,13 +5,15 @@
       "es2015"
     ],
     "module": "esnext",
-    "moduleResolution": "node16",
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "./lib/esm",
     "paths": {
-      "#path": ["./src/path.ts"]
+      "#path": [
+        "./src/path.ts"
+      ]
     },
     "rootDir": "./src",
-    "target": "es5",
+    "target": "es6",
   }
 }
