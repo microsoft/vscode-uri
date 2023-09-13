@@ -6,8 +6,8 @@ const pkg = {
   type: 'module',
   imports: {
     '#path': {
-      browser: 'path-browserify',
-      default: 'path'
+      browser: './path-browserify.js',
+      default: './path.js'
     }
   }
 }

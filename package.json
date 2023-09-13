@@ -13,8 +13,8 @@
   "imports": {
     "#path": {
       "import": {
-        "browser": "path-browserify",
-        "default": "path"
+        "browser": "./lib/esm/path-browserify.js",
+        "default": "./lib/esm/path.js"
       },
       "default": {
         "browser": "./lib/cjs/path-browserify.js",
