@@ -10,3 +10,4 @@ tsconfig.json
 .lsifrc.json
 webpack.config.js
 pipeline.yml
+*.tgz
