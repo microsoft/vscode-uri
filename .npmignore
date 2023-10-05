@@ -2,8 +2,12 @@ src/
 lib/esm/test/
 lib/umd/test/
 .vscode
+.github
 spec
 tsconfig.json
 .mocharc.json
 .travis.yml
+.lsifrc.json
 webpack.config.js
+pipeline.yml
+*.tgz

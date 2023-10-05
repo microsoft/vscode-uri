@@ -57,7 +57,7 @@ module.exports = [
             library: 'LIB',
             libraryTarget: 'var',
             path: path.resolve(__dirname, 'lib', 'esm'),
-            filename: 'index.js'
+            filename: 'index.mjs'
         },
         module: {
             rules: [{
@@ -70,13 +70,13 @@ module.exports = [
                     options: {
                         compilerOptions: {
                             sourceMap: true,
-                            target: 'es5',
+                            target: 'ES2022',
                             forceConsistentCasingInFileNames: true,
                             noImplicitAny: true,
-                            module: 'es6',
+                            module: 'ES2022',
                             declaration: false,
                             lib: [
-                                'es2015'
+                                'ES2022'
                             ]
                         }
                     }

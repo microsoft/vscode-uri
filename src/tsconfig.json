@@ -1,11 +1,12 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES2022",
+        "module": "Node16",
         "declaration": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
         "lib": [
-            "es2015"
+            "ES2022"
         ],
         "outDir": "../lib/umd"
     }
