@@ -6,9 +6,9 @@
   "main": "./lib/umd/index.js",
   "typings": "./lib/umd/index",
   "exports": {
+    "types": "./lib/umd/index.d.ts",
     "import": "./lib/esm/index.mjs",
     "require": "./lib/umd/index.js",
-    "types": "./lib/umd/index.d.ts",
     "browser": "./lib/esm/index.mjs"
   },
   "sideEffects": false,
