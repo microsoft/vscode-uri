@@ -1,0 +1,11 @@
+{
+	"tool": "Credential Scanner",
+	"suppressions": [
+		{
+			"file": [
+				"test/uri.test.ts"
+			],
+			"_justification": "These are all test paths."
+		}
+	]
+}

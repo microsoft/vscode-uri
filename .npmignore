@@ -11,3 +11,4 @@ tsconfig.json
 webpack.config.js
 pipeline.yml
 *.tgz
+CredScanSuppressions.json

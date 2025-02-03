@@ -24,6 +24,7 @@ parameters:
 extends:
   template: azure-pipelines/npm-package/pipeline.yml@templates
   parameters:
+    credscanSuppressionsFile: $(Build.SourcesDirectory)/CredScanSuppressions.json
     npmPackages:
       - name: vscode-uri
 
@@ -40,7 +41,7 @@ extends:
         testPlatforms:
           - name: Linux
             nodeVersions:
-              - 16.x
+              - 20.x
 
         testSteps:
           - script: yarn --frozen-lockfile
@@ -58,6 +59,6 @@ extends:
           - script: yarn test
             displayName: Test npm package
             env:
-              DISPLAY: ':99.0'
+              DISPLAY: ":99.0"
 
         publishPackage: ${{ parameters.publishPackage }}
