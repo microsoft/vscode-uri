@@ -31,8 +31,8 @@
   "homepage": "https://github.com/microsoft/vscode-uri#readme",
   "devDependencies": {
     "@types/mocha": "^10.0.2",
-    "@types/node": "16.x",
-    "mocha": "^10.2.0",
+    "@types/node": "20.x",
+    "mocha": "^11.1.0",
     "path-browserify": "^1.0.1",
     "rimraf": "^5.0.5",
     "ts-loader": "^9.4.4",
