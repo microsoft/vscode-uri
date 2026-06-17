@@ -29,6 +29,10 @@
     "url": "https://github.com/microsoft/vscode-uri/issues"
   },
   "homepage": "https://github.com/microsoft/vscode-uri#readme",
+  "resolutions": {
+    "mocha/diff": "8.0.3",
+    "mocha/serialize-javascript": "7.0.5"
+  },
   "devDependencies": {
     "@types/mocha": "^10.0.2",
     "@types/node": "20.x",
