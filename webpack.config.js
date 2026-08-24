@@ -53,9 +53,13 @@ module.exports = [
                 path: require.resolve('path-browserify')
             }
         },
+        experiments: {
+            outputModule: true
+        },
         output: {
-            library: 'LIB',
-            libraryTarget: 'var',
+            library: {
+                type: 'module'
+            },
             path: path.resolve(__dirname, 'lib', 'esm'),
             filename: 'index.mjs'
         },
@@ -83,22 +87,6 @@ module.exports = [
                 }]
             }]
         },
-        devtool: 'source-map',
-        plugins: [
-            // webpack 5 can not generate ESM modules yet: https://github.com/webpack/webpack/issues/2933
-            // manually add the exports as footer
-            {
-                apply: (compiler) => {
-                    const esmExports = `export const { URI, Utils } = LIB;`;
-                    compiler.hooks.thisCompilation.tap('AddESMExports', compilation => {
-                        compilation.hooks.processAssets.tap({ name: 'AddESMExports', stage: compiler.webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS }, chunks => {
-                            Object.keys(chunks).forEach(fileName => {
-                                compilation.updateAsset(fileName, content => new compiler.webpack.sources.ConcatSource(content, '\n', esmExports));
-                            });
-                        });
-                    });
-                }
-            }
-        ]
+        devtool: 'source-map'
     }
 ]

@@ -8,3 +8,4 @@ import { URI } from './uri';
 import { Utils } from './utils';
 
 export { URI, Utils }
+export default { URI, Utils }
