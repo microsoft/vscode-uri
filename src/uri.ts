@@ -193,7 +193,7 @@ export class URI implements UriComponents {
 	 * ```ts
 		const u = URI.parse('file://server/c$/folder/file.txt')
 		u.authority === 'server'
-		u.path === '/shares/c$/file.txt'
+		u.path === '/c$/file.txt'
 		u.fsPath === '\\server\c$\folder\file.txt'
 	```
 	 *
@@ -565,7 +565,7 @@ export function uriToFsPath(uri: URI, keepDriveLetterCasing: boolean): string {
 
 	let value: string;
 	if (uri.authority && uri.path.length > 1 && uri.scheme === 'file') {
-		// unc path: file://shares/c$/far/boo
+		// unc path: file://c$/far/boo
 		value = `//${uri.authority}${uri.path}`;
 	} else if (
 		uri.path.charCodeAt(0) === CharCode.Slash
